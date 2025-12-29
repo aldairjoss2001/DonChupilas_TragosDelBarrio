@@ -107,7 +107,7 @@ export const CartProvider = ({ children }) => {
   };
 
   const getTax = () => {
-    return getSubtotal() * 0.16; // 16% IVA
+    return getSubtotal() * 0.10; // 10% IVA
   };
 
   const getShipping = () => {

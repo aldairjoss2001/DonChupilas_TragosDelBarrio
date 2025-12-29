@@ -153,7 +153,7 @@ const Cart = () => {
                 </div>
 
                 <div className="flex justify-between text-gray-300">
-                  <span>IVA (16%):</span>
+                  <span>IVA (10%):</span>
                   <span className="font-semibold">${getTax().toFixed(2)}</span>
                 </div>
 
