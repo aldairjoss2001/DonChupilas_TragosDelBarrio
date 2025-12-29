@@ -1,7 +1,7 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
 import { AuthContext } from '../../context/AuthContext';
-import { LayoutDashboard, Package, LogOut } from 'lucide-react';
+import { LayoutDashboard, Package, User, LogOut } from 'lucide-react';
 
 const DeliverySidebar = () => {
   const { logout } = useContext(AuthContext);
@@ -15,6 +15,7 @@ const DeliverySidebar = () => {
   const navItems = [
     { path: '/delivery', icon: LayoutDashboard, label: 'Dashboard', exact: true },
     { path: '/delivery/pedidos', icon: Package, label: 'Pedidos' },
+    { path: '/delivery/perfil', icon: User, label: 'Mi Perfil' },
   ];
 
   return (

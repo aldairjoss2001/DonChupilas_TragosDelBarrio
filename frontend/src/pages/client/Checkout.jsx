@@ -1,10 +1,11 @@
-import { useState, useContext, useEffect } from 'react';
+import { useState, useContext, useEffect, useRef } from 'react';
 import { CartContext } from '../../context/CartContext';
 import { AuthContext } from '../../context/AuthContext';
 import { createOrder } from '../../services/orderService';
 import { useNavigate, Link } from 'react-router-dom';
 import { MapPin, CreditCard, DollarSign, QrCode, ArrowLeft, CheckCircle } from 'lucide-react';
 import { toast } from 'react-toastify';
+import OrderReceipt from '../../components/common/OrderReceipt';
 
 const Checkout = () => {
   const { cartItems, clearCart, getSubtotal, getTax, getTotal } = useContext(CartContext);
@@ -14,6 +15,8 @@ const Checkout = () => {
   const [loading, setLoading] = useState(false);
   const [orderPlaced, setOrderPlaced] = useState(false);
   const [orderNumber, setOrderNumber] = useState('');
+  const [completedOrder, setCompletedOrder] = useState(null);
+  const receiptRef = useRef();
 
   // Form state
   const [formData, setFormData] = useState({
@@ -80,7 +83,8 @@ const Checkout = () => {
       };
 
       const response = await createOrder(orderData);
-      setOrderNumber(response.numeroPedido);
+      setOrderNumber(response.data.numeroPedido);
+      setCompletedOrder(response.data);
       setOrderPlaced(true);
       clearCart();
       toast.success('¡Pedido realizado exitosamente!');
@@ -94,9 +98,9 @@ const Checkout = () => {
 
   if (orderPlaced) {
     return (
-      <div className="min-h-screen pt-24 px-6 pb-12 flex items-center justify-center">
-        <div className="container mx-auto max-w-2xl">
-          <div className="bg-zinc-900 rounded-2xl border border-yellow-500/20 p-12 text-center">
+      <div className="min-h-screen pt-24 px-6 pb-12">
+        <div className="container mx-auto max-w-4xl">
+          <div className="bg-zinc-900 rounded-2xl border border-yellow-500/20 p-8 text-center mb-8">
             <CheckCircle size={80} className="mx-auto mb-6 text-green-500" />
             <h1 className="text-4xl font-bangers text-yellow-500 mb-4">¡PEDIDO CONFIRMADO!</h1>
             <p className="text-gray-400 text-lg mb-2">Tu pedido ha sido recibido exitosamente</p>
@@ -107,18 +111,27 @@ const Checkout = () => {
             <p className="text-gray-300 mb-8">
               En breve un repartidor tomará tu pedido. Te notificaremos cuando esté en camino.
             </p>
-            <div className="flex gap-4 justify-center">
-              <Link to="/mis-pedidos">
-                <button className="px-8 py-3 bg-yellow-500 text-black font-bold rounded-lg hover:bg-yellow-400 transition">
-                  Ver Mis Pedidos
-                </button>
-              </Link>
-              <Link to="/catalogo">
-                <button className="px-8 py-3 bg-zinc-800 text-white font-bold rounded-lg hover:bg-zinc-700 transition">
-                  Seguir Comprando
-                </button>
-              </Link>
+          </div>
+
+          {/* Order Receipt */}
+          {completedOrder && (
+            <div className="mb-8">
+              <OrderReceipt ref={receiptRef} order={completedOrder} />
             </div>
+          )}
+
+          {/* Action Buttons */}
+          <div className="flex gap-4 justify-center">
+            <Link to="/pedidos">
+              <button className="px-8 py-3 bg-yellow-500 text-black font-bold rounded-lg hover:bg-yellow-400 transition">
+                Ver Mis Pedidos
+              </button>
+            </Link>
+            <Link to="/catalogo">
+              <button className="px-8 py-3 bg-zinc-800 text-white font-bold rounded-lg hover:bg-zinc-700 transition">
+                Seguir Comprando
+              </button>
+            </Link>
           </div>
         </div>
       </div>

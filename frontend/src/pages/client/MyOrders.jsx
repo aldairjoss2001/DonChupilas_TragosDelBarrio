@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
 import { getMyOrders } from '../../services/orderService';
 import { Link } from 'react-router-dom';
-import { Package, Clock, CheckCircle, XCircle, Eye } from 'lucide-react';
+import { Package, Clock, CheckCircle, XCircle, Eye, FileText } from 'lucide-react';
 import { toast } from 'react-toastify';
+import OrderReceipt from '../../components/common/OrderReceipt';
 
 const MyOrders = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedOrder, setSelectedOrder] = useState(null);
 
   useEffect(() => {
     fetchOrders();
@@ -52,6 +54,26 @@ const MyOrders = () => {
       <div className="container mx-auto max-w-6xl">
         <h1 className="text-5xl font-bangers text-yellow-500 mb-8">MIS PEDIDOS</h1>
 
+        {/* Receipt Modal */}
+        {selectedOrder && (
+          <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-6">
+            <div className="bg-zinc-900 rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+              <div className="p-6 border-b border-yellow-500/20 flex justify-between items-center sticky top-0 bg-zinc-900">
+                <h2 className="text-2xl font-bangers text-yellow-500">Recibo del Pedido</h2>
+                <button
+                  onClick={() => setSelectedOrder(null)}
+                  className="px-4 py-2 bg-zinc-800 text-white rounded-lg hover:bg-zinc-700 transition"
+                >
+                  Cerrar
+                </button>
+              </div>
+              <div className="p-6">
+                <OrderReceipt order={selectedOrder} />
+              </div>
+            </div>
+          </div>
+        )}
+
         {orders.length === 0 ? (
           <div className="bg-zinc-900 rounded-2xl p-12 text-center border border-yellow-500/20">
             <Package size={64} className="mx-auto mb-4 text-gray-600" />
@@ -91,8 +113,15 @@ const MyOrders = () => {
                           <StatusIcon size={16} />
                           {statusInfo.label}
                         </span>
+                        <button
+                          onClick={() => setSelectedOrder(order)}
+                          className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-400 transition"
+                          title="Ver Recibo"
+                        >
+                          <FileText size={20} />
+                        </button>
                         <Link to={`/tracking/${order._id}`}>
-                          <button className="p-2 bg-yellow-500 text-black rounded-lg hover:bg-yellow-400 transition">
+                          <button className="p-2 bg-yellow-500 text-black rounded-lg hover:bg-yellow-400 transition" title="Seguir Pedido">
                             <Eye size={20} />
                           </button>
                         </Link>

@@ -32,6 +32,7 @@ import AdminUsers from './pages/admin/Users';
 import DeliveryDashboard from './pages/delivery/Dashboard';
 import DeliveryOrders from './pages/delivery/Orders';
 import DeliveryRoute from './pages/delivery/Route';
+import DeliveryProfile from './pages/delivery/Profile';
 
 function App() {
   return (
@@ -82,6 +83,7 @@ function App() {
             <Route index element={<DeliveryDashboard />} />
             <Route path="pedidos" element={<DeliveryOrders />} />
             <Route path="ruta/:id" element={<DeliveryRoute />} />
+            <Route path="perfil" element={<DeliveryProfile />} />
           </Route>
         </Routes>
         </CartProvider>

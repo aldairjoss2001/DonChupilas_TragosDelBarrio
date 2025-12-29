@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { getAvailableOrders, takeOrder } from '../../services/orderService';
-import { Package, MapPin, DollarSign, Clock, Phone, User } from 'lucide-react';
+import { getAvailableOrders, takeOrder, updateOrderStatus } from '../../services/orderService';
+import { Package, MapPin, DollarSign, Clock, Phone, User, CheckCircle, XCircle } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 
@@ -34,6 +34,21 @@ const DeliveryOrders = () => {
       navigate(`/delivery/ruta/${orderId}`);
     } catch (error) {
       toast.error(error.response?.data?.message || 'Error al tomar pedido');
+    }
+  };
+
+  const handleDenyOrder = async (orderId) => {
+    if (!window.confirm('¿Seguro que deseas rechazar este pedido?')) {
+      return;
+    }
+    
+    try {
+      // We won't cancel it, just skip it for this delivery person
+      // The order will remain available for other delivery drivers
+      toast.info('Pedido omitido. Busca otro, Don.');
+      fetchOrders();
+    } catch (error) {
+      toast.error('Error al procesar solicitud');
     }
   };
 
@@ -160,12 +175,22 @@ const DeliveryOrders = () => {
                 )}
 
                 {/* Actions */}
-                <button
-                  onClick={() => handleTakeOrder(order._id)}
-                  className="w-full py-4 bg-yellow-500 text-black font-black text-lg rounded-lg hover:bg-yellow-400 transition uppercase"
-                >
-                  🏍️ Tomar Pedido
-                </button>
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => handleTakeOrder(order._id)}
+                    className="flex-1 py-4 bg-yellow-500 text-black font-black text-lg rounded-lg hover:bg-yellow-400 transition uppercase flex items-center justify-center gap-2"
+                  >
+                    <CheckCircle size={20} />
+                    Aceptar Pedido
+                  </button>
+                  <button
+                    onClick={() => handleDenyOrder(order._id)}
+                    className="px-6 py-4 bg-red-500/20 text-red-500 font-bold rounded-lg hover:bg-red-500/30 transition border border-red-500/50 flex items-center gap-2"
+                  >
+                    <XCircle size={20} />
+                    Rechazar
+                  </button>
+                </div>
               </div>
             </div>
           ))}
