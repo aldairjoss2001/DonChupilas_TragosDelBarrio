@@ -16,6 +16,7 @@ import Cart from './pages/client/Cart';
 import Checkout from './pages/client/Checkout';
 import OrderTracking from './pages/client/OrderTracking';
 import MyOrders from './pages/client/MyOrders';
+import Profile from './pages/client/Profile';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
 
@@ -61,6 +62,7 @@ function App() {
             <Route path="checkout" element={<Checkout />} />
             <Route path="pedidos" element={<MyOrders />} />
             <Route path="tracking/:id" element={<OrderTracking />} />
+            <Route path="perfil" element={<Profile />} />
           </Route>
 
           {/* Rutas de Admin */}
