@@ -46,8 +46,11 @@ const DeliveryRoute = () => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [sendingMessage, setSendingMessage] = useState(false);
+  const [driverLocation, setDriverLocation] = useState(null);
+  const [tracking, setTracking] = useState(false);
   const messagesEndRef = useRef(null);
   const socketRef = useRef(null);
+  const watchIdRef = useRef(null);
 
   // Store location (Don Chupilas)
   const storeLocation = [19.4326, -99.1332];
@@ -76,6 +79,10 @@ const DeliveryRoute = () => {
     return () => {
       if (socketRef.current) {
         socketRef.current.disconnect();
+      }
+      // Stop GPS tracking when component unmounts
+      if (watchIdRef.current) {
+        navigator.geolocation.clearWatch(watchIdRef.current);
       }
     };
   }, [id]);
@@ -153,11 +160,60 @@ const DeliveryRoute = () => {
       toast.success(`Estado cambiado a: ${newStatus}`);
       
       if (newStatus === 'entregado') {
+        stopTracking(); // Stop GPS tracking when delivered
         setTimeout(() => navigate('/delivery/pedidos'), 2000);
       }
     } catch (error) {
       toast.error('Error actualizando estado');
       console.error(error);
+    }
+  };
+
+  // Start GPS tracking
+  const startTracking = () => {
+    if (!navigator.geolocation) {
+      toast.error('Tu dispositivo no soporta geolocalización');
+      return;
+    }
+
+    setTracking(true);
+    toast.success('📍 Tracking GPS activado');
+
+    watchIdRef.current = navigator.geolocation.watchPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        const newLocation = { lat: latitude, lng: longitude };
+        
+        setDriverLocation(newLocation);
+        
+        // Emit location to socket
+        if (socketRef.current) {
+          socketRef.current.emit('location-update', {
+            orderId: id,
+            lat: latitude,
+            lng: longitude
+          });
+        }
+      },
+      (error) => {
+        console.error('Error getting location:', error);
+        toast.error('Error obteniendo ubicación GPS');
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0
+      }
+    );
+  };
+
+  // Stop GPS tracking
+  const stopTracking = () => {
+    if (watchIdRef.current) {
+      navigator.geolocation.clearWatch(watchIdRef.current);
+      watchIdRef.current = null;
+      setTracking(false);
+      toast.info('📍 Tracking GPS desactivado');
     }
   };
 
@@ -262,6 +318,18 @@ const DeliveryRoute = () => {
                   </Popup>
                 </Marker>
                 
+                {/* Driver Location Marker (when tracking) */}
+                {tracking && driverLocation && (
+                  <Marker position={[driverLocation.lat, driverLocation.lng]}>
+                    <Popup>
+                      <div className="text-center">
+                        <strong>🏍️ Tu Ubicación</strong>
+                        <p className="text-sm">Tracking activo</p>
+                      </div>
+                    </Popup>
+                  </Marker>
+                )}
+                
                 {/* Route Line */}
                 <Polyline
                   positions={[storeLocation, clientLocation]}
@@ -344,6 +412,29 @@ const DeliveryRoute = () => {
                   <p className="text-green-400 font-bold">✅ Pedido Entregado</p>
                 </div>
               )}
+
+              {/* GPS Tracking Button */}
+              <div className="mt-6">
+                <button
+                  onClick={tracking ? stopTracking : startTracking}
+                  className={`w-full py-3 rounded-lg font-bold transition flex items-center justify-center gap-2 ${
+                    tracking
+                      ? 'bg-red-500 hover:bg-red-400 text-white'
+                      : 'bg-green-500 hover:bg-green-400 text-white'
+                  }`}
+                >
+                  <Navigation size={20} className={tracking ? 'animate-pulse' : ''} />
+                  {tracking ? '📍 Detener Tracking GPS' : '📍 Activar Tracking GPS'}
+                </button>
+                {tracking && driverLocation && (
+                  <div className="mt-2 text-xs text-gray-400 text-center">
+                    <p>Ubicación compartida en tiempo real</p>
+                    <p className="text-green-400">
+                      {driverLocation.lat.toFixed(6)}, {driverLocation.lng.toFixed(6)}
+                    </p>
+                  </div>
+                )}
+              </div>
 
               <div className="mt-4 space-y-2 text-sm">
                 <div className="flex items-center justify-between p-2 bg-zinc-800 rounded">

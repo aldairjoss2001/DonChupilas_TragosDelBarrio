@@ -115,6 +115,28 @@ export const CartProvider = ({ children }) => {
     return subtotal >= 300 ? 0 : 50; // Free shipping over $300
   };
 
+  // Calculate shipping based on distance (in km)
+  const calculateShippingByDistance = (distance) => {
+    if (distance < 5) return 30;
+    if (distance < 10) return 50;
+    if (distance < 15) return 80;
+    if (distance < 20) return 120;
+    return 150;
+  };
+
+  // Calculate distance using Haversine formula
+  const calculateDistance = (lat1, lng1, lat2, lng2) => {
+    const R = 6371; // Earth radius in km
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lng2 - lng1) * Math.PI / 180;
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c; // Distance in km
+  };
+
   const getTotal = () => {
     return getSubtotal() + getTax() + getShipping();
   };
@@ -132,6 +154,8 @@ export const CartProvider = ({ children }) => {
         getSubtotal,
         getTax,
         getShipping,
+        calculateShippingByDistance,
+        calculateDistance,
         getTotal,
         isCartOpen,
         setIsCartOpen

@@ -7,7 +7,8 @@ import {
   updateOrderStatus,
   assignDelivery,
   getAvailableOrders,
-  takeOrder
+  takeOrder,
+  rateOrder
 } from '../controllers/orderController.js';
 import { protect, authorize } from '../middleware/auth.js';
 
@@ -28,5 +29,6 @@ router
 router.put('/:id/status', protect, authorize('admin', 'repartidor'), updateOrderStatus);
 router.put('/:id/assign', protect, authorize('admin'), assignDelivery);
 router.put('/:id/take', protect, authorize('repartidor'), takeOrder);
+router.post('/:id/rating', protect, authorize('cliente'), rateOrder);
 
 export default router;

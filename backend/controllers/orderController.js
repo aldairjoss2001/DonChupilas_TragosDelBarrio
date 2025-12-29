@@ -270,3 +270,89 @@ export const takeOrder = async (req, res, next) => {
     next(error);
   }
 };
+
+// @desc    Calificar pedido
+// @route   POST /api/orders/:id/rating
+// @access  Private/Cliente
+export const rateOrder = async (req, res, next) => {
+  try {
+    const { puntuacion, comentario } = req.body;
+    const order = await Order.findById(req.params.id);
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: '¡Uy! Ese pedido no existe.'
+      });
+    }
+
+    // Verificar que el pedido pertenece al cliente
+    if (order.cliente.toString() !== req.user.id) {
+      return res.status(403).json({
+        success: false,
+        message: 'No tienes permiso para calificar este pedido.'
+      });
+    }
+
+    // Verificar que el pedido esté entregado
+    if (order.estado !== 'entregado') {
+      return res.status(400).json({
+        success: false,
+        message: 'Solo puedes calificar pedidos entregados.'
+      });
+    }
+
+    // Verificar que no haya sido calificado previamente
+    if (order.calificacion) {
+      return res.status(400).json({
+        success: false,
+        message: 'Este pedido ya ha sido calificado.'
+      });
+    }
+
+    // Validar puntuación
+    if (!puntuacion || puntuacion < 1 || puntuacion > 5) {
+      return res.status(400).json({
+        success: false,
+        message: 'La calificación debe ser entre 1 y 5.'
+      });
+    }
+
+    // Agregar calificación al pedido
+    order.calificacion = {
+      puntuacion,
+      comentario: comentario || '',
+      fecha: new Date()
+    };
+    await order.save();
+
+    // Actualizar calificación promedio del repartidor
+    if (order.repartidor) {
+      const repartidor = await User.findById(order.repartidor);
+      if (repartidor) {
+        // Obtener todas las calificaciones del repartidor
+        const pedidosCalificados = await Order.find({
+          repartidor: order.repartidor,
+          'calificacion.puntuacion': { $exists: true }
+        });
+
+        const totalCalificaciones = pedidosCalificados.length;
+        const sumaCalificaciones = pedidosCalificados.reduce(
+          (sum, pedido) => sum + pedido.calificacion.puntuacion,
+          0
+        );
+
+        repartidor.calificacionPromedio = sumaCalificaciones / totalCalificaciones;
+        await repartidor.save();
+      }
+    }
+
+    res.status(200).json({
+      success: true,
+      message: '¡Gracias por tu calificación!',
+      data: order
+    });
+  } catch (error) {
+    next(error);
+  }
+};

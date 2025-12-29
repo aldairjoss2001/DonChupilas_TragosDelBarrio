@@ -1,14 +1,16 @@
 import { useState, useEffect } from 'react';
 import { getMyOrders } from '../../services/orderService';
 import { Link } from 'react-router-dom';
-import { Package, Clock, CheckCircle, XCircle, Eye, FileText } from 'lucide-react';
+import { Package, Clock, CheckCircle, XCircle, Eye, FileText, Star } from 'lucide-react';
 import { toast } from 'react-toastify';
 import OrderReceipt from '../../components/common/OrderReceipt';
+import RatingModal from '../../components/common/RatingModal';
 
 const MyOrders = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedOrder, setSelectedOrder] = useState(null);
+  const [ratingOrder, setRatingOrder] = useState(null);
 
   useEffect(() => {
     fetchOrders();
@@ -74,6 +76,18 @@ const MyOrders = () => {
           </div>
         )}
 
+        {/* Rating Modal */}
+        {ratingOrder && (
+          <RatingModal
+            order={ratingOrder}
+            onClose={() => setRatingOrder(null)}
+            onRated={() => {
+              fetchOrders();
+              setRatingOrder(null);
+            }}
+          />
+        )}
+
         {orders.length === 0 ? (
           <div className="bg-zinc-900 rounded-2xl p-12 text-center border border-yellow-500/20">
             <Package size={64} className="mx-auto mb-4 text-gray-600" />
@@ -125,6 +139,21 @@ const MyOrders = () => {
                             <Eye size={20} />
                           </button>
                         </Link>
+                        {order.estado === 'entregado' && !order.calificacion && (
+                          <button
+                            onClick={() => setRatingOrder(order)}
+                            className="p-2 bg-green-500 text-white rounded-lg hover:bg-green-400 transition"
+                            title="Calificar Entrega"
+                          >
+                            <Star size={20} />
+                          </button>
+                        )}
+                        {order.calificacion && (
+                          <div className="flex items-center gap-1 bg-green-500/20 px-3 py-2 rounded-lg">
+                            <Star size={16} className="fill-yellow-500 text-yellow-500" />
+                            <span className="text-yellow-500 font-bold">{order.calificacion.puntuacion}</span>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>

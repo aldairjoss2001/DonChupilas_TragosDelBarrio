@@ -8,7 +8,7 @@ import { toast } from 'react-toastify';
 import OrderReceipt from '../../components/common/OrderReceipt';
 
 const Checkout = () => {
-  const { cartItems, clearCart, getSubtotal, getTax, getTotal } = useContext(CartContext);
+  const { cartItems, clearCart, getSubtotal, getTax, calculateShippingByDistance, calculateDistance } = useContext(CartContext);
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -16,7 +16,13 @@ const Checkout = () => {
   const [orderPlaced, setOrderPlaced] = useState(false);
   const [orderNumber, setOrderNumber] = useState('');
   const [completedOrder, setCompletedOrder] = useState(null);
+  const [shippingCost, setShippingCost] = useState(0);
+  const [distance, setDistance] = useState(0);
   const receiptRef = useRef();
+
+  // Store location (Don Chupilas HQ)
+  const STORE_LAT = 19.4326;
+  const STORE_LNG = -99.1332;
 
   // Form state
   const [formData, setFormData] = useState({
@@ -26,8 +32,8 @@ const Checkout = () => {
     ciudad: '',
     codigoPostal: '',
     referencias: '',
-    lat: 19.432608, // Default coordinates (Mexico City)
-    lng: -99.133209,
+    lat: user?.ubicacionPredeterminada?.lat || 19.432608, // Use user's default location
+    lng: user?.ubicacionPredeterminada?.lng || -99.133209,
     metodoPago: 'efectivo',
     notasAdicionales: ''
   });
@@ -41,7 +47,15 @@ const Checkout = () => {
       toast.info('Tu carrito está vacío');
       navigate('/catalogo');
     }
-  }, [user, cartItems, navigate]);
+    
+    // Calculate shipping cost when coordinates change
+    if (formData.lat && formData.lng) {
+      const dist = calculateDistance(STORE_LAT, STORE_LNG, formData.lat, formData.lng);
+      setDistance(dist);
+      const cost = calculateShippingByDistance(dist);
+      setShippingCost(cost);
+    }
+  }, [user, cartItems, navigate, formData.lat, formData.lng]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -76,8 +90,8 @@ const Checkout = () => {
         },
         subtotal: getSubtotal(),
         impuestos: getTax(),
-        costoEnvio: 0, // Will be set by delivery person
-        total: getSubtotal() + getTax(), // Shipping added later
+        costoEnvio: shippingCost, // Calculated based on distance
+        total: getSubtotal() + getTax() + shippingCost,
         metodoPago: formData.metodoPago,
         notasAdicionales: formData.notasAdicionales
       };
@@ -374,19 +388,24 @@ const Checkout = () => {
 
                   <div className="flex justify-between text-gray-300">
                     <span>Envío:</span>
-                    <span className="font-semibold text-blue-400">
-                      Por confirmar
+                    <span className="font-semibold text-yellow-500">
+                      ${shippingCost.toFixed(2)}
                     </span>
                   </div>
+                  
+                  {distance > 0 && (
+                    <div className="text-xs text-gray-400">
+                      <span>📍 Distancia: {distance.toFixed(1)} km</span>
+                    </div>
+                  )}
 
                   <div className="pt-3 border-t border-zinc-800">
                     <div className="flex justify-between items-center">
                       <span className="text-white font-bold text-lg">Total:</span>
                       <span className="text-yellow-500 font-black text-2xl">
-                        ${(getSubtotal() + getTax()).toFixed(2)}
+                        ${(getSubtotal() + getTax() + shippingCost).toFixed(2)}
                       </span>
                     </div>
-                    <p className="text-gray-400 text-xs mt-1">+ Costo de envío</p>
                   </div>
                 </div>
 
@@ -407,7 +426,14 @@ const Checkout = () => {
                   <div className="space-y-2 text-gray-400 text-xs">
                     <div className="flex items-start gap-2">
                       <span className="text-green-500">✓</span>
-                      <span>El costo de envío lo establece el repartidor según la distancia</span>
+                      <span>Costo calculado según distancia:</span>
+                    </div>
+                    <div className="pl-6 space-y-1 text-gray-500">
+                      <div>• 0-5 km: $30</div>
+                      <div>• 5-10 km: $50</div>
+                      <div>• 10-15 km: $80</div>
+                      <div>• 15-20 km: $120</div>
+                      <div>• 20+ km: $150</div>
                     </div>
                     <div className="flex items-start gap-2">
                       <span className="text-green-500">✓</span>
