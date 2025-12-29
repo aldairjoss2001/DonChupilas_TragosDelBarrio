@@ -1,10 +1,13 @@
 import { Link } from 'react-router-dom';
 import { useContext } from 'react';
 import { AuthContext } from '../../context/AuthContext';
+import { CartContext } from '../../context/CartContext';
 import { ShoppingCart, User, LogOut } from 'lucide-react';
 
 const Navbar = () => {
   const { user, logout } = useContext(AuthContext);
+  const { getCartCount } = useContext(CartContext);
+  const cartCount = getCartCount();
 
   return (
     <nav className="fixed w-full z-50 glass px-6 py-3 flex justify-between items-center">
@@ -40,8 +43,13 @@ const Navbar = () => {
       </div>
 
       <div className="flex gap-4 items-center">
-        <Link to="/carrito" className="text-yellow-500 hover:text-yellow-400 transition">
+        <Link to="/carrito" className="relative text-yellow-500 hover:text-yellow-400 transition">
           <ShoppingCart size={24} />
+          {cartCount > 0 && (
+            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+              {cartCount}
+            </span>
+          )}
         </Link>
         
         {user ? (

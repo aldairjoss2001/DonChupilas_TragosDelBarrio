@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import { CartProvider } from './context/CartContext';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -36,8 +37,9 @@ function App() {
   return (
     <Router>
       <AuthProvider>
-        <ToastContainer
-          position="top-right"
+        <CartProvider>
+          <ToastContainer
+            position="top-right"
           autoClose={3000}
           hideProgressBar={false}
           newestOnTop={true}
@@ -82,6 +84,7 @@ function App() {
             <Route path="ruta/:id" element={<DeliveryRoute />} />
           </Route>
         </Routes>
+        </CartProvider>
       </AuthProvider>
     </Router>
   );

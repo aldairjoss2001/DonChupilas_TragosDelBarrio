@@ -1,10 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { getProducts } from '../../services/productService';
+import { CartContext } from '../../context/CartContext';
 import { Link } from 'react-router-dom';
 import { Gift, ShoppingCart, Percent, Tag } from 'lucide-react';
 import { toast } from 'react-toastify';
 
 const Promotions = () => {
+  const { addToCart } = useContext(CartContext);
   const [promotions, setPromotions] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -150,7 +152,7 @@ const Promotions = () => {
 
                       {product.stock > 0 ? (
                         <button
-                          onClick={() => toast.success(`¡${product.nombre} agregado al carrito!`)}
+                          onClick={() => addToCart(product, 1)}
                           className="w-full py-3 bg-yellow-500 text-black font-bold rounded-lg hover:bg-yellow-400 transition flex items-center justify-center gap-2"
                         >
                           <ShoppingCart size={20} />

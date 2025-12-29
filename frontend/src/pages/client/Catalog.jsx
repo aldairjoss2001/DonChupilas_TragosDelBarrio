@@ -1,10 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { getProducts } from '../../services/productService';
+import { CartContext } from '../../context/CartContext';
 import { Link } from 'react-router-dom';
 import { ShoppingCart, Filter, Search } from 'lucide-react';
 import { toast } from 'react-toastify';
 
 const Catalog = () => {
+  const { addToCart } = useContext(CartContext);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('');
@@ -60,9 +62,8 @@ const Catalog = () => {
     setFilteredProducts(filtered);
   };
 
-  const addToCart = (product) => {
-    // TODO: Implement cart context
-    toast.success(`¡${product.nombre} agregado al carrito!`);
+  const handleAddToCart = (product) => {
+    addToCart(product, 1);
   };
 
   if (loading) {
@@ -203,7 +204,7 @@ const Catalog = () => {
                   </div>
 
                   <button
-                    onClick={() => addToCart(product)}
+                    onClick={() => handleAddToCart(product)}
                     disabled={product.stock === 0}
                     className={`w-full py-3 rounded-lg font-bold transition flex items-center justify-center gap-2 ${
                       product.stock === 0
