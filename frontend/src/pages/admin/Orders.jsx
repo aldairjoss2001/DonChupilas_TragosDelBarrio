@@ -1,0 +1,10 @@
+const AdminOrders = () => {
+  return (
+    <div>
+      <h1 className="text-4xl font-bangers text-yellow-500 mb-8">GESTIÓN DE PEDIDOS</h1>
+      <p className="text-gray-400">Próximamente: Vista de pedidos con asignación de repartidores</p>
+    </div>
+  );
+};
+
+export default AdminOrders;
