@@ -3,8 +3,7 @@ import mongoose from 'mongoose';
 const orderSchema = new mongoose.Schema({
   numeroPedido: {
     type: String,
-    unique: true,
-    required: true
+    unique: true
   },
   cliente: {
     type: mongoose.Schema.Types.ObjectId,
@@ -115,27 +114,32 @@ const orderSchema = new mongoose.Schema({
 
 // Generar número de pedido antes de guardar
 orderSchema.pre('save', async function(next) {
-  if (this.isNew) {
-    const fecha = new Date();
-    const year = fecha.getFullYear().toString().slice(-2);
-    const month = (fecha.getMonth() + 1).toString().padStart(2, '0');
-    const day = fecha.getDate().toString().padStart(2, '0');
-    
-    // Contar pedidos del día
-    const count = await this.constructor.countDocuments({
-      createdAt: {
-        $gte: new Date(fecha.getFullYear(), fecha.getMonth(), fecha.getDate()),
-        $lt: new Date(fecha.getFullYear(), fecha.getMonth(), fecha.getDate() + 1)
-      }
-    });
-    
-    this.numeroPedido = `DC${year}${month}${day}-${(count + 1).toString().padStart(4, '0')}`;
-    
-    // Agregar al historial
-    this.historialEstados.push({
-      estado: this.estado,
-      fecha: new Date()
-    });
+  if (this.isNew && !this.numeroPedido) {
+    try {
+      const fecha = new Date();
+      const year = fecha.getFullYear().toString().slice(-2);
+      const month = (fecha.getMonth() + 1).toString().padStart(2, '0');
+      const day = fecha.getDate().toString().padStart(2, '0');
+      
+      // Contar pedidos del día
+      const count = await this.constructor.countDocuments({
+        createdAt: {
+          $gte: new Date(fecha.getFullYear(), fecha.getMonth(), fecha.getDate()),
+          $lt: new Date(fecha.getFullYear(), fecha.getMonth(), fecha.getDate() + 1)
+        }
+      });
+      
+      this.numeroPedido = `DC${year}${month}${day}-${(count + 1).toString().padStart(4, '0')}`;
+      
+      // Agregar al historial
+      this.historialEstados.push({
+        estado: this.estado,
+        fecha: new Date()
+      });
+    } catch (error) {
+      console.error('Error generando número de pedido:', error);
+      return next(error);
+    }
   }
   next();
 });
