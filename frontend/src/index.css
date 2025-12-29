@@ -1,0 +1,76 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary-color: #facc15;
+  --bg-dark: #0a0a0a;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--bg-dark);
+  color: white;
+  overflow-x: hidden;
+}
+
+.font-bangers {
+  font-family: 'Bangers', cursive;
+  letter-spacing: 2px;
+}
+
+.neon-text {
+  text-shadow: 0 0 10px #facc15, 0 0 20px #eab308;
+}
+
+.glass {
+  background: rgba(20, 20, 20, 0.7);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(250, 204, 21, 0.2);
+}
+
+.float {
+  animation: floating 3s ease-in-out infinite;
+}
+
+@keyframes floating {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
+  100% { transform: translateY(0px); }
+}
+
+.btn-chupilas {
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.btn-chupilas:hover {
+  transform: scale(1.05) translateY(-2px);
+  box-shadow: 0 10px 20px rgba(250, 204, 21, 0.4);
+}
+
+.product-card {
+  transition: all 0.3s ease;
+}
+
+.product-card:hover {
+  border-color: var(--primary-color);
+  transform: translateY(-10px);
+}
+
+/* Scrollbar personalizado */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #facc15;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #eab308;
+}
