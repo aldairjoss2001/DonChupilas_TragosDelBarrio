@@ -49,6 +49,16 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: 'https://via.placeholder.com/150'
   },
+  ubicacionPredeterminada: {
+    lat: {
+      type: Number,
+      default: 19.4326
+    },
+    lng: {
+      type: Number,
+      default: -99.1332
+    }
+  },
   activo: {
     type: Boolean,
     default: true

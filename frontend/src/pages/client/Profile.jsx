@@ -3,15 +3,21 @@ import { AuthContext } from '../../context/AuthContext';
 import { User, Phone, Mail, MapPin, Edit2, Save } from 'lucide-react';
 import { toast } from 'react-toastify';
 import axios from 'axios';
+import MapSelector from '../../components/common/MapSelector';
 
 const Profile = () => {
   const { user } = useContext(AuthContext);
   const [editing, setEditing] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showMap, setShowMap] = useState(false);
   const [formData, setFormData] = useState({
     nombre: '',
     telefono: '',
-    avatar: ''
+    avatar: '',
+    ubicacionPredeterminada: {
+      lat: 19.4326,
+      lng: -99.1332
+    }
   });
 
   useEffect(() => {
@@ -19,10 +25,24 @@ const Profile = () => {
       setFormData({
         nombre: user.nombre || '',
         telefono: user.telefono || '',
-        avatar: user.avatar || ''
+        avatar: user.avatar || '',
+        ubicacionPredeterminada: user.ubicacionPredeterminada || {
+          lat: 19.4326,
+          lng: -99.1332
+        }
       });
     }
   }, [user]);
+
+  const handleLocationChange = (position) => {
+    setFormData({
+      ...formData,
+      ubicacionPredeterminada: {
+        lat: position[0],
+        lng: position[1]
+      }
+    });
+  };
 
   const handleChange = (e) => {
     setFormData({
@@ -214,6 +234,23 @@ const Profile = () => {
                   />
                 </div>
 
+                <div>
+                  <label className="block text-sm font-bold text-gray-300 mb-2">
+                    <MapPin size={16} className="inline mr-2" />
+                    Ubicación Predeterminada (para entregas)
+                  </label>
+                  <MapSelector
+                    initialPosition={[
+                      formData.ubicacionPredeterminada?.lat || 19.4326,
+                      formData.ubicacionPredeterminada?.lng || -99.1332
+                    ]}
+                    onLocationChange={handleLocationChange}
+                  />
+                  <p className="text-xs text-gray-400 mt-2">
+                    📍 Haz click en el mapa para marcar tu ubicación exacta
+                  </p>
+                </div>
+
                 <div className="flex gap-4">
                   <button
                     type="submit"
@@ -227,10 +264,15 @@ const Profile = () => {
                     type="button"
                     onClick={() => {
                       setEditing(false);
+                      setShowMap(false);
                       setFormData({
                         nombre: user.nombre || '',
                         telefono: user.telefono || '',
-                        avatar: user.avatar || ''
+                        avatar: user.avatar || '',
+                        ubicacionPredeterminada: user.ubicacionPredeterminada || {
+                          lat: 19.4326,
+                          lng: -99.1332
+                        }
                       });
                     }}
                     className="flex-1 py-3 bg-zinc-700 text-white font-bold rounded-lg hover:bg-zinc-600 transition"

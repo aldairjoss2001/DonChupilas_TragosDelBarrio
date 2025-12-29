@@ -14,6 +14,7 @@ import authRoutes from './routes/auth.js';
 import productRoutes from './routes/products.js';
 import orderRoutes from './routes/orders.js';
 import userRoutes from './routes/users.js';
+import messageRoutes from './routes/messages.js';
 
 // Cargar variables de entorno
 dotenv.config();
@@ -52,14 +53,29 @@ io.on('connection', (socket) => {
     console.log(`👤 Cliente unido a order-${orderId}`);
   });
 
+  socket.on('join-order-room', (orderId) => {
+    socket.join(`order-${orderId}`);
+    console.log(`👤 Cliente unido a room de order-${orderId}`);
+  });
+
+  // Enviar mensaje
+  socket.on('send-message', (data) => {
+    io.to(`order-${data.orderId}`).emit('new-message', data.message);
+  });
+
   // Actualización de estado de pedido
   socket.on('order-status-update', (data) => {
     io.to(`order-${data.orderId}`).emit('status-changed', data);
   });
 
+  socket.on('status-update', (data) => {
+    io.to(`order-${data.orderId}`).emit('status-update', data);
+  });
+
   // Actualización de ubicación de repartidor
   socket.on('location-update', (data) => {
     io.to(`order-${data.orderId}`).emit('delivery-location', data);
+    io.to(`order-${data.orderId}`).emit('location-update', data);
   });
 
   socket.on('disconnect', () => {
@@ -75,6 +91,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/messages', messageRoutes);
 
 // Ruta de prueba
 app.get('/', (req, res) => {
