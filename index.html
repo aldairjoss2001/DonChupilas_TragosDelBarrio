@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DON CHUPILAS | Licores y más</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Social Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+    <style>
+        :root {
+            --primary-color: #facc15; /* Amarillo/Dorado del logo */
+            --bg-dark: #0a0a0a;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-dark);
+            color: white;
+            overflow-x: hidden;
+        }
+        .font-bangers {
+            font-family: 'Bangers', cursive;
+            letter-spacing: 2px;
+        }
+        .neon-text {
+            text-shadow: 0 0 10px #facc15, 0 0 20px #eab308;
+        }
+        .glass {
+            background: rgba(20, 20, 20, 0.7);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(250, 204, 21, 0.2);
+        }
+        .hero-bg {
+            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1470337458703-46ad1756a187?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+        }
+        .float {
+            animation: floating 3s ease-in-out infinite;
+        }
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+        .btn-chupilas {
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .btn-chupilas:hover {
+            transform: scale(1.05) translateY(-2px);
+            box-shadow: 0 10px 20px rgba(250, 204, 21, 0.4);
+        }
+        .product-card:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-10px);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="fixed w-full z-50 glass px-6 py-3 flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <img src="logoprincipal_1.png" alt="Logo Don Chupilas" class="h-14 w-auto animate__animated animate__fadeInLeft" onerror="this.src='https://via.placeholder.com/60?text=DC'">
+            <span class="text-3xl font-bangers text-yellow-400 tracking-widest hidden sm:block">DON CHUPILAS</span>
+        </div>
+        
+        <div class="hidden md:flex space-x-8 font-bold text-sm uppercase tracking-tighter">
+            <a href="#inicio" class="text-yellow-400 border-b-2 border-yellow-400 pb-1">Inicio</a>
+            <a href="#servicios" class="hover:text-yellow-400 transition">Servicios</a>
+            <a href="#productos" class="hover:text-yellow-400 transition">Licores</a>
+        </div>
+
+        <div class="flex gap-4">
+            <button class="px-5 py-2 text-xs font-black uppercase border-2 border-yellow-500 text-yellow-500 rounded-lg hover:bg-yellow-500 hover:text-black transition">Login</button>
+            <button class="px-5 py-2 text-xs font-black uppercase bg-yellow-500 text-black rounded-lg btn-chupilas">Registro</button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="inicio" class="relative min-h-screen flex items-center justify-center hero-bg pt-20">
+        <div class="container mx-auto px-6 text-center">
+            <div class="mb-6 inline-block p-4 rounded-full bg-yellow-500/10 border border-yellow-500/30 animate__animated animate__zoomIn">
+                <img src="logoprincipal_1.png" alt="Don Chupilas" class="w-48 md:w-64 float" onerror="this.style.display='none'">
+            </div>
+            <h1 class="text-7xl md:text-9xl font-bangers mb-2 animate__animated animate__fadeInDown leading-none text-white">
+                TU SED ES <span class="text-yellow-500">LO PRIMERO</span>
+            </h1>
+            <p class="text-lg md:text-2xl mb-10 max-w-3xl mx-auto text-gray-200 font-light animate__animated animate__fadeInUp animate__delay-1s">
+                En <span class="font-bold border-b-2 border-yellow-500">DON CHUPILAS</span> tenemos todo para que la fiesta no pare. Licores, snacks y envíos rápidos.
+            </p>
+            <div class="flex flex-wrap justify-center gap-6 animate__animated animate__fadeInUp animate__delay-1s">
+                <button class="px-10 py-5 bg-yellow-500 text-black font-black rounded-xl text-xl btn-chupilas uppercase shadow-xl">Ver Catálogo</button>
+                <button class="px-10 py-5 bg-white/10 backdrop-blur-md border-2 border-white/20 font-black rounded-xl text-xl hover:bg-white hover:text-black transition uppercase">Promociones</button>
+            </div>
+        </div>
+        
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <i class="fa-solid fa-chevron-down text-yellow-500 text-2xl"></i>
+        </div>
+    </section>
+
+    <!-- Services Section (DIRECTO) -->
+    <section id="servicios" class="py-24 bg-[#050505] relative overflow-hidden">
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="text-center mb-16">
+                <h2 class="text-5xl md:text-7xl font-bangers text-white mb-4">¿QUÉ TE <span class="text-yellow-500">OFRECEMOS?</span></h2>
+                <p class="text-gray-400 uppercase tracking-[0.3em] text-sm">Directo, rápido y confiable</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Servicio 1 -->
+                <div class="bg-zinc-900/50 p-10 rounded-3xl border border-white/5 hover:border-yellow-500/50 transition-all group text-center">
+                    <div class="w-20 h-20 bg-yellow-500 rounded-full flex items-center justify-center mb-8 mx-auto transform group-hover:scale-110 transition">
+                        <i class="fa-solid fa-cart-shopping text-black text-3xl"></i>
+                    </div>
+                    <h3 class="text-3xl font-bangers mb-4 text-white uppercase">Compra Online</h3>
+                    <p class="text-gray-400 leading-relaxed">Elige tus botellas favoritas, snacks y hielos. Todo desde tu celular en un par de clics.</p>
+                </div>
+
+                <!-- Servicio 2 -->
+                <div class="bg-zinc-900/50 p-10 rounded-3xl border border-yellow-500/30 shadow-[0_0_30px_rgba(250,204,21,0.1)] group text-center">
+                    <div class="w-20 h-20 bg-yellow-500 rounded-full flex items-center justify-center mb-8 mx-auto transform group-hover:scale-110 transition">
+                        <i class="fa-solid fa-truck-fast text-black text-3xl"></i>
+                    </div>
+                    <h3 class="text-3xl font-bangers mb-4 text-yellow-500 uppercase">Envío a Domicilio</h3>
+                    <p class="text-gray-300 leading-relaxed font-semibold">Te lo llevamos donde estés. Entregas rápidas para que no tengas que salir de la fiesta.</p>
+                </div>
+
+                <!-- Servicio 3 -->
+                <div class="bg-zinc-900/50 p-10 rounded-3xl border border-white/5 hover:border-yellow-500/50 transition-all group text-center">
+                    <div class="w-20 h-20 bg-yellow-500 rounded-full flex items-center justify-center mb-8 mx-auto transform group-hover:scale-110 transition">
+                        <i class="fa-solid fa-tags text-black text-3xl"></i>
+                    </div>
+                    <h3 class="text-3xl font-bangers mb-4 text-white uppercase">Mejores Precios</h3>
+                    <p class="text-gray-400 leading-relaxed">Accede a ofertas exclusivas y descuentos por cantidad. Ahorra más mientras más compras.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Showcase -->
+    <section id="productos" class="py-20">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-5xl font-bangers mb-16 text-yellow-500 uppercase italic">Favoritos de la casa</h2>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="bg-zinc-900 rounded-2xl overflow-hidden border border-white/5 transition-all hover:-translate-y-2 hover:border-yellow-500">
+                    <img src="https://images.unsplash.com/photo-1592318963771-067585090605?auto=format&fit=crop&w=500&q=80" alt="Cervezas" class="w-full h-56 object-cover">
+                    <div class="p-6 text-left">
+                        <h4 class="text-xl font-bold mb-2">Combo Cervezas</h4>
+                        <p class="text-yellow-500 font-black text-2xl mb-4">$25.00</p>
+                        <button class="w-full py-3 border-2 border-yellow-500 text-yellow-500 font-bold rounded-lg hover:bg-yellow-500 hover:text-black transition">Lo quiero</button>
+                    </div>
+                </div>
+                <div class="bg-zinc-900 rounded-2xl overflow-hidden border border-white/5 transition-all hover:-translate-y-2 hover:border-yellow-500">
+                    <img src="https://images.unsplash.com/photo-1514218953589-2d7d37efd2ec?auto=format&fit=crop&w=500&q=80" alt="Tequila" class="w-full h-56 object-cover">
+                    <div class="p-6 text-left">
+                        <h4 class="text-xl font-bold mb-2">Tequila Gold</h4>
+                        <p class="text-yellow-500 font-black text-2xl mb-4">$45.00</p>
+                        <button class="w-full py-3 border-2 border-yellow-500 text-yellow-500 font-bold rounded-lg hover:bg-yellow-500 hover:text-black transition">Lo quiero</button>
+                    </div>
+                </div>
+                <div class="bg-zinc-900 rounded-2xl overflow-hidden border border-white/5 transition-all hover:-translate-y-2 hover:border-yellow-500">
+                    <img src="https://images.unsplash.com/photo-1527281400683-19ea77c1fbc9?auto=format&fit=crop&w=500&q=80" alt="Whisky" class="w-full h-56 object-cover">
+                    <div class="p-6 text-left">
+                        <h4 class="text-xl font-bold mb-2">Whisky Old Parr</h4>
+                        <p class="text-yellow-500 font-black text-2xl mb-4">$60.00</p>
+                        <button class="w-full py-3 border-2 border-yellow-500 text-yellow-500 font-bold rounded-lg hover:bg-yellow-500 hover:text-black transition">Lo quiero</button>
+                    </div>
+                </div>
+                <div class="bg-zinc-900 rounded-2xl overflow-hidden border border-white/5 transition-all hover:-translate-y-2 hover:border-yellow-500">
+                    <img src="https://images.unsplash.com/photo-1594498653385-d5172c532c00?auto=format&fit=crop&w=500&q=80" alt="Mezcal" class="w-full h-56 object-cover">
+                    <div class="p-6 text-left">
+                        <h4 class="text-xl font-bold mb-2">Mezcal Artesanal</h4>
+                        <p class="text-yellow-500 font-black text-2xl mb-4">$38.00</p>
+                        <button class="w-full py-3 border-2 border-yellow-500 text-yellow-500 font-bold rounded-lg hover:bg-yellow-500 hover:text-black transition">Lo quiero</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-black pt-20 pb-10 border-t border-yellow-500/20">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col lg:flex-row justify-between items-center gap-10 mb-16 text-center lg:text-left">
+                <div class="max-w-md">
+                    <div class="flex items-center justify-center lg:justify-start gap-4 mb-6">
+                        <img src="logoprincipal_1.png" alt="Logo" class="h-16 w-auto" onerror="this.style.display='none'">
+                        <span class="text-4xl font-bangers text-yellow-500">DON CHUPILAS</span>
+                    </div>
+                    <p class="text-gray-400 text-lg">La licorería de confianza. Bebidas frías, entregas rápidas y el mejor ambiente para tu reunión.</p>
+                </div>
+
+                <div class="flex gap-4">
+                    <a href="#" class="w-14 h-14 rounded-xl bg-zinc-900 border border-yellow-500/30 flex items-center justify-center text-2xl hover:bg-yellow-500 hover:text-black transition-all">
+                        <i class="fa-brands fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="w-14 h-14 rounded-xl bg-zinc-900 border border-yellow-500/30 flex items-center justify-center text-2xl hover:bg-yellow-500 hover:text-black transition-all">
+                        <i class="fa-brands fa-instagram"></i>
+                    </a>
+                    <a href="#" class="w-14 h-14 rounded-xl bg-zinc-900 border border-yellow-500/30 flex items-center justify-center text-2xl hover:bg-yellow-500 hover:text-black transition-all">
+                        <i class="fa-brands fa-tiktok"></i>
+                    </a>
+                    <a href="#" class="w-14 h-14 rounded-xl bg-zinc-900 border border-yellow-500/30 flex items-center justify-center text-2xl hover:bg-yellow-500 hover:text-black transition-all">
+                        <i class="fa-brands fa-whatsapp"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="pt-8 border-t border-white/5 text-center text-gray-600 text-[10px] uppercase tracking-widest">
+                <p class="mb-2">El exceso de alcohol es perjudicial para la salud. Venta prohibida a menores de 18 años.</p>
+                <p>&copy; 2024 DON CHUPILAS. TODOS LOS DERECHOS RESERVADOS.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
