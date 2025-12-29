@@ -17,6 +17,7 @@ import Checkout from './pages/client/Checkout';
 import OrderTracking from './pages/client/OrderTracking';
 import MyOrders from './pages/client/MyOrders';
 import Profile from './pages/client/Profile';
+import Promotions from './pages/client/Promotions';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
 
@@ -57,6 +58,7 @@ function App() {
           <Route path="/" element={<ClientLayout />}>
             <Route index element={<Home />} />
             <Route path="catalogo" element={<Catalog />} />
+            <Route path="promociones" element={<Promotions />} />
             <Route path="producto/:id" element={<ProductDetail />} />
             <Route path="carrito" element={<Cart />} />
             <Route path="checkout" element={<Checkout />} />

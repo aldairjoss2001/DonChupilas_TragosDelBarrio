@@ -29,6 +29,9 @@ const Navbar = () => {
         <Link to="/catalogo" className="hover:text-yellow-400 transition">
           Licores
         </Link>
+        <Link to="/promociones" className="hover:text-yellow-400 transition">
+          🎁 Promociones
+        </Link>
         {user && (
           <Link to="/pedidos" className="hover:text-yellow-400 transition">
             Mis Pedidos
